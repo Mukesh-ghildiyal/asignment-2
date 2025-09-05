@@ -108,20 +108,27 @@ export const ContentGrid: React.FC<ContentGridProps> = ({
                   return (
                     <Draggable key={itemId} draggableId={itemId} index={index}>
                       {(provided, snapshot) => (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          transition={{ delay: 0.1 }}
-                          className="your-class"
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="relative"
                         >
-                          {renderContentCard(item, snapshot.isDragging)}
-                          {snapshot.isDragging && (
-                            <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
-                              Moving...
-                            </div>
-                          )}
-                        </motion.div>
+                          <motion.div
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ delay: 0.1 }}
+                            className="your-class"
+                          >
+                            {renderContentCard(item, snapshot.isDragging)}
+                            {snapshot.isDragging && (
+                              <div className="absolute top-2 right-2 bg-blue-500 text-white px-2 py-1 rounded text-xs font-medium">
+                                Moving...
+                              </div>
+                            )}
+                          </motion.div>
+                        </div>
                       )}
                     </Draggable>
                   );
