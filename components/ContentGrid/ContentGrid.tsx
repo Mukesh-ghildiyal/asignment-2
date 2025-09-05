@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ContentItem } from '@/store/api/contentApi';
-import { NewsCard } from '../ContentCard/NewsCard';
-import { BookCard } from '../ContentCard/BookCard';
-import { SocialCard } from '../ContentCard/SocialCard';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { updateContentOrder } from '@/store/slices/contentSlice';
+import React from "react";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { motion, AnimatePresence } from "framer-motion";
+import { ContentItem } from "@/store/api/contentApi";
+import { NewsCard } from "../ContentCard/NewsCard";
+import { BookCard } from "../ContentCard/BookCard";
+import { SocialCard } from "../ContentCard/SocialCard";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { updateContentOrder } from "@/store/slices/contentSlice";
 
 interface ContentGridProps {
   items: ContentItem[];
@@ -17,7 +17,12 @@ interface ContentGridProps {
   loading: boolean;
 }
 
-export const ContentGrid: React.FC<ContentGridProps> = ({ items, onLoadMore, hasMore, loading }) => {
+export const ContentGrid: React.FC<ContentGridProps> = ({
+  items,
+  onLoadMore,
+  hasMore,
+  loading,
+}) => {
   const dispatch = useAppDispatch();
   const { layout } = useAppSelector((state) => state.preferences);
   const { contentOrder } = useAppSelector((state) => state.content);
@@ -25,11 +30,11 @@ export const ContentGrid: React.FC<ContentGridProps> = ({ items, onLoadMore, has
   // Sort items based on contentOrder if it exists
   const sortedItems = React.useMemo(() => {
     if (contentOrder.length === 0) return items;
-    
+
     const orderedItems: ContentItem[] = [];
     const unorderedItems: ContentItem[] = [];
 
-    items.forEach(item => {
+    items.forEach((item) => {
       const id = getItemId(item);
       const orderIndex = contentOrder.indexOf(id);
       if (orderIndex !== -1) {
@@ -44,14 +49,14 @@ export const ContentGrid: React.FC<ContentGridProps> = ({ items, onLoadMore, has
 
   const getItemId = (item: ContentItem): string => {
     switch (item.type) {
-      case 'news':
+      case "news":
         return item.id;
-      case 'book':
+      case "book":
         return item.key;
-      case 'social':
+      case "social":
         return item.id.toString();
       default:
-        return '';
+        return "";
     }
   };
 
@@ -68,25 +73,29 @@ export const ContentGrid: React.FC<ContentGridProps> = ({ items, onLoadMore, has
 
   const renderContentCard = (item: ContentItem, isDragging = false) => {
     switch (item.type) {
-      case 'news':
+      case "news":
         return <NewsCard article={item} isDragging={isDragging} />;
-      case 'book':
+      case "book":
         return <BookCard book={item} isDragging={isDragging} />;
-      case 'social':
+      case "social":
         return <SocialCard post={item} isDragging={isDragging} />;
       default:
         return null;
     }
   };
 
-  const gridClasses = layout === 'grid' 
-    ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-    : 'flex flex-col space-y-6';
+  const gridClasses =
+    layout === "grid"
+      ? "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+      : "flex flex-col space-y-6";
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="content-grid" direction={layout === 'grid' ? 'horizontal' : 'vertical'}>
+        <Droppable
+          droppableId="content-grid"
+          direction={layout === "grid" ? "horizontal" : "vertical"}
+        >
           {(provided) => (
             <div
               ref={provided.innerRef}
@@ -100,14 +109,11 @@ export const ContentGrid: React.FC<ContentGridProps> = ({ items, onLoadMore, has
                     <Draggable key={itemId} draggableId={itemId} index={index}>
                       {(provided, snapshot) => (
                         <motion.div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                          initial={{ opacity: 0, y: 50 }}
+                          initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -50 }}
-                          transition={{ delay: index * 0.05 }}
-                          className="relative"
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ delay: 0.1 }}
+                          className="your-class"
                         >
                           {renderContentCard(item, snapshot.isDragging)}
                           {snapshot.isDragging && (
@@ -141,7 +147,7 @@ export const ContentGrid: React.FC<ContentGridProps> = ({ items, onLoadMore, has
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            {loading ? 'Loading...' : 'Load More Content'}
+            {loading ? "Loading..." : "Load More Content"}
           </motion.button>
         </motion.div>
       )}
